@@ -780,6 +780,18 @@ class Key {
     keyCodes.forEach{ key => game.whenKeyPressedDo(key, action) }
   }
 
+  /**
+   * Adds a block that will be executed always self is released.
+   *
+   * Example:
+   *     keyboard.i().onReleaseDo { game.say(pepita, "chau!") } 
+   *         => when user release "i" key, pepita will say "chau!"
+   */  
+  @Type(name="Void") 
+  method onReleaseDo(@Type(name="{ () => Void }") action) {
+    keyCodes.forEach{ key => game.whenKeyReleasedDo(key, action) }
+  }
+
   @Type(name="Void")
   method whilePressedDo(@Type(name="{ () => Void }") action, @Type(name="Number") milliseconds) {
     keyCodes.forEach{ key =>

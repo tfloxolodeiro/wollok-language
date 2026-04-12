@@ -28,6 +28,27 @@ describe 'Key events' {
     assert.that(io.eventHandlersFor(event).contains(closureMock))
   }
   
+  test 'whenKeyReleasedDo should add event handler' {
+    const event = ["keyrelease", "KeyA"]
+    keyboard.a().onReleaseDo(closureMock)
+    assert.that(io.eventHandlersFor(event).contains(closureMock))
+  }
+  
+  test 'whilePressedDo should execute handler between press and release' {
+    const press = ["keypress", "KeyA"]
+    const release = ["keyrelease", "KeyA"]
+    keyboard.a().whilePressedDo(closureMock, 2)
+    io.flushEvents(0) // NO
+    io.flushEvents(1) // NO
+    io.queueEvent(press)
+    io.flushEvents(2) // Yes
+    io.flushEvents(3) // Yes
+    io.queueEvent(release)
+    io.flushEvents(4) // NO
+    io.flushEvents(5) // NO
+    assert.equals(2, closureMock.calledCount())
+  }
+
   test 'clear should clear event handlers' {
     const event = ["keypress"]
     game.whenKeyPressedDo(event, closureMock)
