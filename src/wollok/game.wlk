@@ -109,7 +109,7 @@ object game {
 
   /**
    * Adds a block that will be executed each time a specific key is pressed
-   * @see keyboard.onPressDo()
+   * @see Key.onPressDo()
    */  
   @Type(name="Void")
   method whenKeyPressedDo(@Type(name="String") event, @Type(name="{ () => Void }") action) {
@@ -118,6 +118,10 @@ object game {
     io.addEventHandler(['keypress', event], action)
   }
 
+  /**
+   * Adds a block that will be executed each time a specific key is released
+   * @see Key.onReleaseDo()
+   */  
   @Type(name="Void")
   method whenKeyReleasedDo(@Type(name="String") event, @Type(name="{ () => Void }") action) {
     self.checkNotNull(event, "whenKeyReleasedDo")
@@ -792,6 +796,13 @@ class Key {
     keyCodes.forEach{ key => game.whenKeyReleasedDo(key, action) }
   }
 
+  /**
+   * Adds a block that will be executed each milliseconds since self is pressed until self is released.
+   *
+   * Example:
+   *     keyboard.a().whilePressedDo({ pepita.moveLeft() }, 100)
+   *         => while the user is pressing "a" key, pepita will move to the left
+   */  
   @Type(name="Void")
   method whilePressedDo(@Type(name="{ () => Void }") action, @Type(name="Number") milliseconds) {
     keyCodes.forEach{ key =>
