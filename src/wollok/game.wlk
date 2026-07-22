@@ -804,14 +804,9 @@ class Key {
   @Type(name="Void")
   method whilePressedDo(@Type(name="{ () => Void }") action, @Type(name="Number") milliseconds) {
     keyCodes.forEach{ key =>
-      const tickName = "whilePressed_" + key
-      game.whenKeyPressedDo(key, {
-        action.apply()
-        game.onTick(milliseconds, tickName, action)
-      })
-      game.whenKeyReleasedDo(key, {
-        game.removeTickEvent(tickName)
-      })
+      const tick = game.tick(milliseconds, action, true)
+      game.whenKeyPressedDo(key, { tick.start() })
+      game.whenKeyReleasedDo(key, { tick.stop() })
     }
   }
   
