@@ -128,6 +128,16 @@ object game {
     self.checkNotNull(action, "whenKeyReleasedDo")
     io.addEventHandler(['keyrelease', event], action)
   }
+  
+  /**
+   * Removes all blocks associated to a specific key
+   * @see keyboard.onPressDo()
+   */
+  @Type(name="Void")
+  method cleanKeyPress(@Type(name="String") event) { 
+    self.checkNotNull(event, "cleanKeyPress")
+    io.removeEventHandler(['keypress', event])
+  }
 
   /**
    * Adds a block that will be executed while the given object collides with other. 
@@ -371,18 +381,6 @@ object game {
   method boardGround(@Type(name="String") file) {
     boardGround = file
   }
-
-  /**
-   * Attributes will not show when user mouse over a visual component.
-   */
-  @Type(name="Void") 
-  method hideAttributes(visual) native
-  
-  /**
-   * Attributes will appear again when user mouse over a visual component.
-   */
-  @Type(name="Void") 
-  method showAttributes(visual) native
        
   /**
    * Returns a sound object. Audio file must be a .mp3, .ogg or .wav file.
@@ -815,6 +813,20 @@ class Key {
         game.removeTickEvent(tickName)
       })
     }
+  }
+  
+  /**
+   * Removes all blocks associated with self.
+   *
+   * Example:
+   *     keyboard.i().onPressDo { game.say(pepita, "hola!") } 
+   *         => when user hits "i" key, pepita will say "hola!"
+   *     keyboard.i().clean()
+   *         => when user hits "i" key, pepita won't do anything
+   */
+  @Type(name="Void")
+  method clean() {
+    keyCodes.forEach{ key => game.cleanKeyPress(key) }
   }
 }
 
